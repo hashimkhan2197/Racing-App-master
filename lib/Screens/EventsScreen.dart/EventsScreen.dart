@@ -1,8 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:racingApp/Constants/constant.dart';
-import 'package:racingApp/models/Cars.dart';
 import 'package:racingApp/models/Events.dart';
 
 class EventScreen extends StatelessWidget {
@@ -14,10 +12,10 @@ class EventScreen extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      // each event have a color
+        // each event have a color
 
         appBar: AppBar(
-          title: Text("EVENT"),
+          title: Text(event.title),
           centerTitle: true,
           actions: <Widget>[
 //        IconButton(
@@ -30,7 +28,6 @@ class EventScreen extends StatelessWidget {
 //        ),
             SizedBox(width: kDefaultPaddin / 2),
             SizedBox(width: kDefaultPaddin / 2),
-
           ],
         ),
         body: Container(
@@ -39,7 +36,7 @@ class EventScreen extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               Container(
-                color: Colors.grey[350],
+                color: Colors.white,
                 height: height / 2,
                 width: width,
                 child: CarouselSlider(

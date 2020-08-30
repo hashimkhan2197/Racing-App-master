@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:racingApp/Constants/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:progress_indicators/progress_indicators.dart';
 import 'package:racingApp/Providers/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,8 +33,10 @@ class SplashScreenState extends State<SplashScreen>
       Navigator.of(context).pushReplacementNamed(WELCOME_PAGE);
     else
       currentUser != null
-          ? Provider.of<User>(context).getCurrentUserData(currentUser.uid).then((value) {
-              Navigator.of(context).pushReplacementNamed(PRIMARY_SCREEN);
+          ? Provider.of<User>(context)
+              .getCurrentUserData(currentUser.uid)
+              .then((value) {
+              Navigator.of(context).pushReplacementNamed(NAVABAR_SCREEN);
             })
           : Navigator.of(context).pushReplacementNamed(LOGIN_SCREEN);
   }

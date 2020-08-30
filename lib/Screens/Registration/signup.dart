@@ -17,7 +17,6 @@ import 'package:racingApp/Widgets/custom_textfield.dart';
 import 'package:racingApp/Widgets/customappbar.dart';
 import 'package:racingApp/Widgets/responsive_widget.dart';
 
-
 class SignUpScreen extends StatefulWidget {
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
@@ -192,7 +191,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-
   ///Custom form fields for form elements section
   Widget nameTextFormField() {
     return CustomTextField(
@@ -200,8 +198,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       icon: Icons.person,
       hint: "Name",
       textEditingController: firstnameController,
-      validator: (String val){
-        if(val.trim().isEmpty){
+      validator: (String val) {
+        if (val.trim().isEmpty) {
           return "Name must not be empty";
         }
         return null;
@@ -215,8 +213,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       icon: Icons.email,
       hint: "Email ID",
       textEditingController: emailController,
-      validator: (String val){
-        if(val.trim().isEmpty){
+      validator: (String val) {
+        if (val.trim().isEmpty) {
           return "Email must not be empty";
         }
         return null;
@@ -231,8 +229,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       icon: Icons.lock,
       hint: "Password",
       textEditingController: passwordController,
-      validator: (String val){
-        if(val.trim().isEmpty){
+      validator: (String val) {
+        if (val.trim().isEmpty) {
           return "Password must not be empty";
         }
         return null;
@@ -247,8 +245,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       icon: Icons.phone,
       hint: "Phone Number",
       textEditingController: phoneNumberContoller,
-      validator: (String val){
-        if(val.trim().isEmpty){
+      validator: (String val) {
+        if (val.trim().isEmpty) {
           return "Number must not be empty";
         }
         return null;
@@ -263,15 +261,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
       icon: Icons.card_travel,
       hint: "Vehicle Details",
       textEditingController: vehicleDetailsController,
-      validator: (String val){
-        if(val.trim().isEmpty){
+      validator: (String val) {
+        if (val.trim().isEmpty) {
           return "Vehicle Details must not be empty";
         }
         return null;
       },
     );
   }
-
 
   ///Terms and conditions checkbox
   Widget acceptTermsTextRow() {
@@ -313,28 +310,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
               if (imagecheck && _formKey.currentState.validate()) {
                 signUp();
               } else {
-                imagecheck==false?showDialog(
-                    context: context,
-                    child: AlertDialog(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(18.0),
-                          side: BorderSide(
-                            color: Colors.red[400],
-                          )),
-                      title: Text("Wait..."),
-                      content: Text("Image Not Uploaded"),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Text(
-                            "OK",
-                            style: TextStyle(color: Colors.red[400]),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        )
-                      ],
-                    )):null;
+                imagecheck == false
+                    ? showDialog(
+                        context: context,
+                        child: AlertDialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(18.0),
+                              side: BorderSide(
+                                color: Colors.red[400],
+                              )),
+                          title: Text("Wait..."),
+                          content: Text("Image Not Uploaded"),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text(
+                                "OK",
+                                style: TextStyle(color: Colors.red[400]),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            )
+                          ],
+                        ))
+                    : null;
               }
             },
             textColor: Colors.white,
@@ -437,7 +436,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         await addUsertoFirebase(userUid);
 
         Provider.of<User>(context).getCurrentUserData(userUid).then((value) {
-          Navigator.of(context).pushReplacementNamed(PRIMARY_SCREEN);
+          Navigator.of(context).pushReplacementNamed(NAVABAR_SCREEN);
         });
         setState(() {
           signupLoading = false;
@@ -540,7 +539,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'phonenumber': phoneNumberContoller.text,
       'useruid': userUid,
       'userimage': imageUrl,
-      'location' : 'disabled'
+      'location': 'disabled'
     });
   }
 

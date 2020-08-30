@@ -15,35 +15,50 @@ class ItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: press,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.all(kDefaultPaddin),
-              decoration: BoxDecoration(
-                  // color: product.color,
-                  borderRadius: BorderRadius.circular(16),
-                  image: DecorationImage(
-                      image: NetworkImage(product.image), fit: BoxFit.cover)),
+      child: Container(
+        decoration: BoxDecoration(boxShadow: [
+          BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.3),
+              offset: Offset(6, 2),
+              blurRadius: 6.0,
+              spreadRadius: 3.0),
+          BoxShadow(
+              color: Color.fromRGBO(255, 255, 255, 0.9),
+              offset: Offset(-6, -2),
+              blurRadius: 6.0,
+              spreadRadius: 3.0)
+        ]),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  padding: EdgeInsets.all(kDefaultPaddin),
+                  decoration: BoxDecoration(
+                      // color: product.color,
+                      borderRadius: BorderRadius.circular(5),
+                      image: DecorationImage(
+                          image: NetworkImage(product.image),
+                          fit: BoxFit.cover)),
+                ),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin / 4),
-            child: Text(
-              // products is out demo list
-              product.title,
-              style: TextStyle(
-                  color: primarycolor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin / 4),
+              child: Text(
+                // products is out demo list
+                product.title,
+                style: TextStyle(color: primarycolor, fontSize: 20),
+              ),
             ),
-          ),
-          Text(
-            "\$${product.price}",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          )
-        ],
+            Text(
+              "\$${product.price}",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -11,6 +11,11 @@ const String CLOTHES_SHOP_PAGE = "/clothesshop";
 const String PROFILE = "/profile";
 const String FULL_MAP = "/fullmap";
 const String EVENT_SCREEN = "/eventScreen";
+const String NAVABAR_SCREEN = "/navBarScreen";
+const String CHAT_SCREEN = "/ChatScreen";
+const String EVENTLIST_SCREEN = "/EventListScreen";
+const String CART_SCREEN = "/CartScreen";
+const String ORDER_HISTORY = "/orderHistory";
 //Colours
 Color primarycolor = Colors.red[400];
 

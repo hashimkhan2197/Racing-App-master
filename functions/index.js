@@ -18,6 +18,7 @@ exports.sendNotificationToTopic = functions.firestore.document('chat/{uid}').onW
     console.log(response);
 });
 
+
 //exports.sendNotificationToFCMToken = functions.firestore.document('messages/{mUid}').onWrite(async (event) => {
 //    const uid = event.after.get('userUid');
 //    const title = event.after.get('title');

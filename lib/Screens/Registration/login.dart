@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,9 +7,7 @@ import 'package:racingApp/Constants/constant.dart';
 import 'package:racingApp/Providers/user.dart';
 import 'package:racingApp/Widgets/custom_shape.dart';
 import 'package:racingApp/Widgets/custom_textfield.dart';
-import 'package:racingApp/Widgets/customappbar.dart';
 import 'package:racingApp/Widgets/responsive_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInPage extends StatelessWidget {
   @override
@@ -112,7 +108,8 @@ class _SignInScreenState extends State<SignInScreen> {
       ],
     );
   }
-///welcome text ui
+
+  ///welcome text ui
   Widget welcomeTextRow() {
     return Container(
       margin: EdgeInsets.only(left: _width / 20, top: _height / 120),
@@ -129,7 +126,8 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
-///sign in text at the top ui
+
+  ///sign in text at the top ui
   Widget signInTextRow() {
     return Container(
       margin: EdgeInsets.only(left: _width / 15.0),
@@ -146,7 +144,6 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
-
 
   ///UI section for login form
   Widget form() {
@@ -173,8 +170,8 @@ class _SignInScreenState extends State<SignInScreen> {
       textEditingController: emailController,
       icon: Icons.email,
       hint: "Email ID",
-      validator: (String val){
-        if(val.trim().isEmpty){
+      validator: (String val) {
+        if (val.trim().isEmpty) {
           return 'Email must not be empty';
         }
         return null;
@@ -189,8 +186,8 @@ class _SignInScreenState extends State<SignInScreen> {
       icon: Icons.lock,
       obscureText: true,
       hint: "Password",
-      validator: (String val){
-        if (val.trim().isEmpty){
+      validator: (String val) {
+        if (val.trim().isEmpty) {
           return "Passworm must not be empty";
         }
         return null;
@@ -239,12 +236,13 @@ class _SignInScreenState extends State<SignInScreen> {
                 borderRadius: BorderRadius.circular(30.0)),
             onPressed: () async {
               //check if form is valid and then sign in and store data in shared prefs
-              if(_key.currentState.validate()){
+              if (_key.currentState.validate()) {
                 setState(() {
                   loginLoading = true;
                 });
                 try {
-                  final AuthResult user = (await _auth.signInWithEmailAndPassword(
+                  final AuthResult user =
+                      (await _auth.signInWithEmailAndPassword(
                     email: emailController.text,
                     password: passwordController.text,
                   ));
@@ -266,8 +264,11 @@ class _SignInScreenState extends State<SignInScreen> {
                     String userEmail = user.user.email;
                     String userUid = user.user.uid;
 
-                    Provider.of<User>(context).getCurrentUserData(userUid).then((value) {
-                      Navigator.of(context).pushReplacementNamed(PRIMARY_SCREEN);
+                    Provider.of<User>(context)
+                        .getCurrentUserData(userUid)
+                        .then((value) {
+                      Navigator.of(context)
+                          .pushReplacementNamed(NAVABAR_SCREEN);
                     });
                     setState(() {
                       loginLoading = false;
@@ -278,11 +279,11 @@ class _SignInScreenState extends State<SignInScreen> {
                     //   _userEmail = user.email;
                     // });
                   }
-
                 } catch (signUpError) {
                   setState(() {
                     loginLoading = false;
                   });
+
                   ///Error Catching phase
                   if (signUpError is PlatformException) {
                     if (signUpError.code == 'ERROR_INVALID_EMAIL') {
@@ -359,7 +360,6 @@ class _SignInScreenState extends State<SignInScreen> {
                   }
                 }
               }
-
             },
 
             // onPressed: () {

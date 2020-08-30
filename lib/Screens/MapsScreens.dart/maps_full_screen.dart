@@ -15,115 +15,145 @@ class FullScreenMap extends StatefulWidget {
   final Position initialPosition;
   final String currentUserid;
 
-  FullScreenMap(this.initialPosition,this.currentUserid);
+  FullScreenMap(this.initialPosition, this.currentUserid);
   @override
   _FullScreenMapState createState() => _FullScreenMapState();
 }
 
 class _FullScreenMapState extends State<FullScreenMap> {
+
+  BitmapDescriptor iconCurrentUser ;
+  BitmapDescriptor iconOtherRacers ;
+
   final GeolocatorService geoService = GeolocatorService();
   Completer<GoogleMapController> _controller = Completer();
 
-
   List<Marker> _markers = [];
   StreamSubscription<QuerySnapshot> _markerStreamSubscription;
-  StreamSubscription<dynamic> _positionStream ;
+  StreamSubscription<dynamic> _positionStream;
+
+  /// icon Marker
+  getIcons() async {
+    var icon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 3.0,),
+        "assets/images/markeruser.png",
+
+    );
+    setState(() {
+      this.iconCurrentUser = icon;
+      this.iconOtherRacers = icon;
+    });
+  }
 
   ///updating markers stream
-  void _updateMarkers(List<DocumentSnapshot> documentList){
-
+  void _updateMarkers(List<DocumentSnapshot> documentList) {
 
     List<Marker> markers = [];
     documentList.forEach((DocumentSnapshot document) {
-      if(document.data['lat'] != null && document.data['useruid'] != widget.currentUserid){
-        markers.add(
-            Marker(markerId: MarkerId(document.documentID),
-              draggable: false,
-              onTap: (){
-                showDialog(
-                    context: context,
-                    child: AlertDialog(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(18.0),
-                          side: BorderSide(
-                            color: Colors.red[400],
-                          )),
-                      title: Text("Racer Details"),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
+      BitmapDescriptor markerIcon = document.data['useruid'] != widget.currentUserid?iconOtherRacers:iconCurrentUser;
+      if (document.data['lat'] != null) {
+        markers.add(Marker(
+          markerId: MarkerId(document.documentID),
+          draggable: false,
+          onTap: () {
+            showDialog(
+                context: context,
+                child: AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(18.0),
+                      side: BorderSide(
+                        color: Colors.red[400],
+                      )),
+                  title: Text("Racer Details"),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Row(
                         children: <Widget>[
-                          Row(children: <Widget>[
-                            CircleAvatar(
-                              maxRadius: 30,
-
-                              backgroundColor: Theme.of(context).primaryColor,
-                              backgroundImage: NetworkImage(document.data['userimage']),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
-                              child: Text(document.data['name'],softWrap: true,maxLines: 2,
-                              style: TextStyle(color: Theme.of(context).primaryColor,fontSize: 22,
-                              fontWeight: FontWeight.w500),
-                              ),
-                            )
-                          ],),
-
-                          Container(
-                            padding: EdgeInsets.all(8),
-                            alignment: Alignment.centerLeft,
-                            child: Text(document.data['vehicedetails'],maxLines: 5,
-                            softWrap: true,style: TextStyle(color: Colors.grey,fontSize: 17),
-                            ),
+                          CircleAvatar(
+                            maxRadius: 30,
+                            backgroundColor: Theme.of(context).primaryColor,
+                            backgroundImage:
+                                NetworkImage(document.data['userimage']),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Text(
+                              document.data['name'],
+                              softWrap: true,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          )
                         ],
                       ),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Icon(Icons.call,size: 25,color: Theme.of(context).primaryColor,),
-                          onPressed: () {
-                            launch("tel://${document.data['phoneNumber']}");
-                          },
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          document.data['vehicedetails'],
+                          maxLines: 5,
+                          softWrap: true,
+                          style: TextStyle(color: Colors.grey, fontSize: 17),
                         ),
-                        FlatButton(
-                          child: Icon(Icons.message,size: 25,color: Theme.of(context).primaryColor,),
-                          onPressed: () {
-                            initiateChatConversation(ctx: context,receiverName: document.data['name'],
+                      ),
+                    ],
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Icon(
+                        Icons.call,
+                        size: 25,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      onPressed: () {
+                        launch("tel://${document.data['phoneNumber']}");
+                      },
+                    ),
+                    FlatButton(
+                      child: Icon(
+                        Icons.message,
+                        size: 25,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      onPressed: () {
+                        initiateChatConversation(
+                            ctx: context,
+                            receiverName: document.data['name'],
                             receiverId: document.data['useruid'],
-                              receiverEmail: document.data['email']
-                            );
-                          },
-                        )
-                      ],
-                    ));
-              },
-              icon: BitmapDescriptor.defaultMarker,
-              position:LatLng(document.data['lat'],document.data['lng']),
-            )
+                            receiverEmail: document.data['email']);
+                      },
+                    )
+                  ],
+                ));
+          },
+          icon:BitmapDescriptor.defaultMarker,
 
-        );
+          position: LatLng(document.data['lat'], document.data['lng']),
+        ));
       }
-    }
-    );
-    _markers = markers;
-    setState(() {
-
     });
-    print("Markers Length: "+_markers.toString());
+    _markers = markers;
+    setState(() {});
+    print("Markers Length: " + _markers.toString());
   }
 
   /// 1.create a chatroom, send user to the chatroom, other userdetails
   void initiateChatConversation(
       {BuildContext ctx,
-        String receiverName,
-        receiverEmail,
-        receiverId}) async {
+      String receiverName,
+      receiverEmail,
+      receiverId}) async {
     UserModel userProfile = Provider.of<User>(context).userProfile;
     List<String> userNames = [userProfile.name, receiverName];
     List<String> userEmails = [userProfile.email, receiverEmail];
     List<String> userUids = [userProfile.useruid, receiverId];
 
     String chatRoomId =
-    ChatService.getChatRoomId(userProfile.useruid, receiverId);
+        ChatService.getChatRoomId(userProfile.useruid, receiverId);
 
     Map<String, dynamic> chatRoom = {
       "usernames": userNames,
@@ -137,32 +167,33 @@ class _FullScreenMapState extends State<FullScreenMap> {
     Navigator.pushReplacement(
         ctx,
         MaterialPageRoute(
-            builder: (context) => ChatScreen(chatRoomId, receiverName,receiverId)));
+            builder: (context) =>
+                ChatScreen(chatRoomId, receiverName, receiverId)));
   }
-
-
-
 
   @override
   void initState() {
+    getIcons();
     _positionStream = geoService.getCurrentLocation().listen((position) {
-      Firestore.instance.collection('Users').document(widget.currentUserid).updateData({
-        'lat':position.latitude,
-        'lng':position.longitude
-      });
+      Firestore.instance
+          .collection('Users')
+          .document(widget.currentUserid)
+          .updateData({'lat': position.latitude, 'lng': position.longitude});
       print(position.toString());
       centerScreen(position);
     });
 
-    _markerStreamSubscription = Firestore.instance.collection("Users")
-        .where('location',isEqualTo: 'disabled').snapshots().listen((snapshot) {
+    _markerStreamSubscription = Firestore.instance
+        .collection("Users")
+        .where('location', isEqualTo: 'enabled')
+        .snapshots()
+        .listen((snapshot) {
       print("lenght of stream" + snapshot.documents.length.toString());
       _updateMarkers(snapshot.documents);
     });
 
     super.initState();
   }
-
 
   @override
   void dispose() {
@@ -202,37 +233,45 @@ class _FullScreenMapState extends State<FullScreenMap> {
 
         ///body to mark all available racers
         body: Container(
-          height: height,
-          width: width,
-          child: GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                        target: LatLng(widget.initialPosition.latitude,
-                            widget.initialPosition.longitude),
-                        zoom: 18.151926040649414,bearing: 192.8334901395799,tilt: 59.440717697143555),
-                    mapType: MapType.satellite,
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: true,
-                    markers: Set.from(_markers),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+            ),
+            height: height,
+            width: width,
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              child: GoogleMap(
+                initialCameraPosition: CameraPosition(
+                    target: LatLng(widget.initialPosition.latitude,
+                        widget.initialPosition.longitude),
+                    zoom: 18.151926040649414,
+                    bearing: 192.8334901395799,
+                    tilt: 59.440717697143555),
+                mapType: MapType.satellite,
+                myLocationEnabled: true,
+                myLocationButtonEnabled: true,
+                markers: Set.from(_markers),
+                zoomControlsEnabled: false,
+                compassEnabled: false,
 //                    onTap: (LatLng p){
 ////                      Firestore.instance.collection("Users").add({
 ////                        'lat' : p.latitude,
 ////                        'lng' : p.longitude,
 ////                      });
 //                    },
-                    onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
-                    },
-                  )
-           )
-        );
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
+              ),
+            )));
   }
-
 
   Future<void> centerScreen(Position position) async {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-        target: LatLng(position.latitude, position.longitude), zoom: 18.151926040649414,bearing: 192.8334901395799,tilt: 59.440717697143555)));
+        target: LatLng(position.latitude, position.longitude),
+        zoom: 18.151926040649414,
+        bearing: 192.8334901395799,
+        tilt: 59.440717697143555)));
   }
-
 }
-

@@ -9,9 +9,23 @@ class ShopHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(context),
-      body: Body(),
-    );
+        appBar: buildAppBar(context),
+        body: Body(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return AddCarScreen();
+            }));
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Text(
+              "SELL",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ));
   }
 
   AppBar buildAppBar(BuildContext context) {
@@ -38,23 +52,6 @@ class ShopHomeScreen extends StatelessWidget {
 //          ),
 //          onPressed: () {},
 //        ),
-        SizedBox(width: kDefaultPaddin / 2),
-        InkWell(
-          onTap: () async{
-            Navigator.push(context, MaterialPageRoute(builder: (context){
-              return AddCarScreen();
-            }));
-          },
-          child: Container(
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.all(8.0),
-              // child: CircleAvatar(
-              //   backgroundImage: AssetImage("assets/logo.png"),
-              // ),
-              child: Text("Add Car",style: TextStyle(color: Colors.white),)),
-        ),
-        SizedBox(width: kDefaultPaddin / 2),
-
       ],
     );
   }
